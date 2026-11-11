@@ -515,6 +515,8 @@ export default async (req: Request) => {
           notes: z.string().max(2000),
         })
         .parse(await req.json())
+      if (b.status === 'approved')
+        throw new Error('Application approvals are disabled in this demonstration.')
       await db.transaction(async (tx) => {
         const [app] = await tx
           .update(applications)
@@ -592,6 +594,7 @@ export default async (req: Request) => {
                   'Invalid amount.',
                   'Enter an amount of at least $0.01.',
                   'Financial approvals are disabled.',
+                  'Application approvals are disabled in this demonstration.',
                 ].includes(e.message)
               ? e.message
               : 'The request could not be completed. Please try again.',
