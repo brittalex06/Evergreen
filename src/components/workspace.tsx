@@ -279,6 +279,10 @@ export function Workspace({
             {(data?.profile.name || user.name || 'E').charAt(0)}
           </a>
         </header>
+        <div className="simulation-notice" role="note">
+          <ShieldCheck size={17} />
+          <span><strong>Demonstration workspace.</strong> Balances and activity are illustrative only. Transfers, deposits, withdrawals, cards, loans, identity verification, and investment actions are disabled.</span>
+        </div>
         <main className="workspace-content">
           <div className="workspace-title">
             <div>
