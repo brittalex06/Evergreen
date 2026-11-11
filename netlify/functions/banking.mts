@@ -38,6 +38,16 @@ export default async (req: Request) => {
   const headers = { 'Cache-Control': 'no-store' }
   try {
     const route = new URL(req.url).pathname.split('/').pop()
+    if (route === 'transfer' && req.method === 'POST')
+      return Response.json(
+        { error: 'Transfers are unavailable. Evergreen is currently a non-operational financial demonstration.' },
+        { status: 403, headers },
+      )
+    if (route === 'application' && req.method === 'POST')
+      return Response.json(
+        { error: 'Financial applications and account actions are disabled. No real funds, cards, loans, identity checks, or investments are processed.' },
+        { status: 403, headers },
+      )
     const db = database()
     if (req.method !== 'GET') verifyRequestOrigin(req)
     if (route === 'inquiry' && req.method === 'POST') {
@@ -514,6 +524,8 @@ export default async (req: Request) => {
           )
           .returning()
         if (!app) throw new Error('This application has already been reviewed.')
+        if (b.status === 'approved' && ['loan', 'deposit'].includes(app.kind))
+          throw new Error('Financial approvals are disabled.')
         if (b.status === 'approved' && ['loan', 'deposit'].includes(app.kind)) {
           const cents = Math.round(Number(app.data.amount) * 100)
           if (!Number.isSafeInteger(cents) || cents <= 0 || cents > 100000000)
@@ -579,6 +591,7 @@ export default async (req: Request) => {
                   'This application has already been reviewed.',
                   'Invalid amount.',
                   'Enter an amount of at least $0.01.',
+                  'Financial approvals are disabled.',
                 ].includes(e.message)
               ? e.message
               : 'The request could not be completed. Please try again.',
