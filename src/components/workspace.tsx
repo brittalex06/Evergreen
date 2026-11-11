@@ -279,6 +279,10 @@ export function Workspace({
             {(data?.profile.name || user.name || 'E').charAt(0)}
           </a>
         </header>
+        <div className="simulation-notice" role="note">
+          <ShieldCheck size={17} />
+          <span><strong>Demonstration workspace.</strong> Balances and activity are illustrative only. Transfers, deposits, withdrawals, cards, loans, identity verification, and investment actions are disabled.</span>
+        </div>
         <main className="workspace-content">
           <div className="workspace-title">
             <div>
@@ -430,6 +434,20 @@ function AccountView({
     >
   }
   const demoWallet = data.wallets?.find((w) => w.symbol === depositCurrency)
+  if (['transfer', 'deposit', 'cards', 'kyc', 'loan', 'invest', 'link-card'].includes(page))
+    return (
+      <Panel title="This feature is currently unavailable">
+        <div className="feature-unavailable">
+          <ShieldCheck size={30} />
+          <h3>Financial actions are disabled</h3>
+          <p>
+            This Evergreen workspace is for product exploration only. It does not accept deposits, send or withdraw money, issue cards, process identity checks, make credit decisions, or execute investments.
+          </p>
+          <p>Account figures and past activity are illustrative and have no cash value.</p>
+          <a href="/account">Return to your overview <ArrowUpRight size={14} /></a>
+        </div>
+      </Panel>
+    )
   const formNotice = notice ? (
     <p className="form-notice full" role="status">
       {notice}

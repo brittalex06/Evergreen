@@ -38,6 +38,16 @@ export default async (req: Request) => {
   const headers = { 'Cache-Control': 'no-store' }
   try {
     const route = new URL(req.url).pathname.split('/').pop()
+    if (route === 'transfer' && req.method === 'POST')
+      return Response.json(
+        { error: 'Transfers are unavailable. Evergreen is currently a non-operational financial demonstration.' },
+        { status: 403, headers },
+      )
+    if (route === 'application' && req.method === 'POST')
+      return Response.json(
+        { error: 'Financial applications and account actions are disabled. No real funds, cards, loans, identity checks, or investments are processed.' },
+        { status: 403, headers },
+      )
     const db = database()
     if (req.method !== 'GET') verifyRequestOrigin(req)
     if (route === 'inquiry' && req.method === 'POST') {
@@ -505,6 +515,8 @@ export default async (req: Request) => {
           notes: z.string().max(2000),
         })
         .parse(await req.json())
+      if (b.status === 'approved')
+        throw new Error('Application approvals are disabled in this demonstration.')
       await db.transaction(async (tx) => {
         const [app] = await tx
           .update(applications)
@@ -514,25 +526,6 @@ export default async (req: Request) => {
           )
           .returning()
         if (!app) throw new Error('This application has already been reviewed.')
-        if (b.status === 'approved' && ['loan', 'deposit'].includes(app.kind)) {
-          const cents = Math.round(Number(app.data.amount) * 100)
-          if (!Number.isSafeInteger(cents) || cents <= 0 || cents > 100000000)
-            throw new Error('Invalid amount.')
-          await tx
-            .update(profiles)
-            .set({ balance: sql`${profiles.balance}+${cents}` })
-            .where(eq(profiles.id, app.userId))
-          await tx.insert(ledger).values({
-            userId: app.userId,
-            amount: cents,
-            description: 'Simulated ' + app.kind + ' approval',
-          })
-        }
-        if (app.kind === 'kyc' && b.status === 'approved')
-          await tx
-            .update(profiles)
-            .set({ data: sql`${profiles.data} || '{"accountLevel":2}'::jsonb` })
-            .where(eq(profiles.id, app.userId))
         await tx
           .insert(audits)
           .values({ actor: user.id, action: b.status, target: b.id })
@@ -579,6 +572,8 @@ export default async (req: Request) => {
                   'This application has already been reviewed.',
                   'Invalid amount.',
                   'Enter an amount of at least $0.01.',
+                  'Financial approvals are disabled.',
+                  'Application approvals are disabled in this demonstration.',
                 ].includes(e.message)
               ? e.message
               : 'The request could not be completed. Please try again.',

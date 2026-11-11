@@ -44,6 +44,10 @@ import {
 import type { User, Settings } from '@netlify/identity'
 import { Workspace } from './workspace'
 export async function api(path: string, data?: unknown) {
+  if (data && ['transfer', 'application'].includes(path))
+    throw new Error(
+      'This feature is currently unavailable. Evergreen is a demonstration and does not process real financial activity.',
+    )
   const r = await fetch('/api/banking/' + path, {
     method: data ? 'POST' : 'GET',
     headers: data ? { 'Content-Type': 'application/json' } : undefined,
@@ -170,9 +174,9 @@ function Header() {
       <header className="header container">
         <Brand />
         <div className="banking-label">
-          Personal Banking
+          Personal Finance Experience
           <br />
-          <span>Business Banking</span>
+          <span>Business tools</span>
         </div>
         <button
           className="mobile-toggle"
@@ -219,7 +223,7 @@ function Header() {
           </div>
           <a href="/contact">Contact Us</a>
           <a className="nav-login" href="/login">
-            Online Banking <ArrowUpRight size={14} />
+            Member sign-in <ArrowUpRight size={14} />
           </a>
           <a className="button small" href="/register">
             Enrolment <ArrowUpRight size={14} />
@@ -339,22 +343,21 @@ function Home() {
               <span className="badge-icon">
                 <ShieldCheck size={14} />
               </span>{' '}
-              SECURE GLOBAL BANKING
+              A CLEARER FINANCIAL EXPERIENCE
             </span>
             <h1>
-              Send money to
+              Explore your
               <br />
-              <span>130+ countries.</span>
+              <span>financial world.</span>
             </h1>
             <p>
-              Fast, secure, and transparent transfers with illustrative rates.
-              <br className="desktop" /> Your money moves at the speed of
-              possibility.
+              Explore a thoughtfully designed digital finance experience for everyday planning.
+              <br className="desktop" /> Browse sample account tools and see how a clearer financial picture can feel.
             </p>
             <div className="benefits">
-              <span>In minutes</span>
-              <span>Low fees</span>
-              <span>Great rates</span>
+              <span>Simple overview</span>
+              <span>Clear navigation</span>
+              <span>Built to explore</span>
             </div>
             <ButtonLink href="/login">Get Started Now</ButtonLink>
             <div className="hero-note">
@@ -368,7 +371,7 @@ function Home() {
               <span /> SCROLL TO EXPLORE
             </span>
             <span>
-              Wherever life takes you, grow with it. <ArrowUpRight size={14} />
+              Explore the experience at your own pace. <ArrowUpRight size={14} />
             </span>
           </div>
         </div>
@@ -492,7 +495,7 @@ function Setup() {
 const offerings = [
   {
     icon: ArrowLeftRight,
-    title: 'More money. Fewer borders.',
+    title: 'A clearer view of your finances.',
     text: 'Explore straightforward transfers with clear, illustrative rates.',
   },
   {
@@ -519,14 +522,14 @@ function Transfers() {
           <div>
             <span className="eyebrow">GLOBAL REACH. PERSONAL TOUCH.</span>
             <h2>
-              A little less in fees.
-              <br />A little more for you.
+              A little more clarity.
+              <br />A little more control.
             </h2>
           </div>
           <p>
-            No subscription fee in this demonstration.
+            This is an independent product experience.
             <br />
-            Just a simpler way to explore moving money.
+            Financial services are not connected or available.
           </p>
         </div>
         <div className="offering-grid">
@@ -1155,7 +1158,7 @@ function Auth({
               <Field label="Last name" name="lastName" />
               <Field label="Phone (optional)" name="phone" required={false} />
               <Countries />
-              <h3 className="full">Banking details</h3>
+              <h3 className="full">Account details</h3>
               <SelectField
                 label="Account type"
                 name="accountType"
