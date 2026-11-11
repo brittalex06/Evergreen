@@ -44,6 +44,10 @@ import {
 import type { User, Settings } from '@netlify/identity'
 import { Workspace } from './workspace'
 export async function api(path: string, data?: unknown) {
+  if (data && ['transfer', 'application'].includes(path))
+    throw new Error(
+      'This feature is currently unavailable. Evergreen is a demonstration and does not process real financial activity.',
+    )
   const r = await fetch('/api/banking/' + path, {
     method: data ? 'POST' : 'GET',
     headers: data ? { 'Content-Type': 'application/json' } : undefined,
