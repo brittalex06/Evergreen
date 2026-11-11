@@ -176,7 +176,7 @@ function Header() {
         <div className="banking-label">
           Personal Finance Experience
           <br />
-          <span>Business Banking</span>
+          <span>Business tools</span>
         </div>
         <button
           className="mobile-toggle"
@@ -223,7 +223,7 @@ function Header() {
           </div>
           <a href="/contact">Contact Us</a>
           <a className="nav-login" href="/login">
-            Online Banking <ArrowUpRight size={14} />
+            Member sign-in <ArrowUpRight size={14} />
           </a>
           <a className="button small" href="/register">
             Enrolment <ArrowUpRight size={14} />
@@ -1158,7 +1158,7 @@ function Auth({
               <Field label="Last name" name="lastName" />
               <Field label="Phone (optional)" name="phone" required={false} />
               <Countries />
-              <h3 className="full">Banking details</h3>
+              <h3 className="full">Account details</h3>
               <SelectField
                 label="Account type"
                 name="accountType"
