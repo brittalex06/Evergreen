@@ -3376,3 +3376,23 @@ td small {
     border: 0;
   }
 }
+
+
+.simulation-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 28px 0;
+  padding: 12px 15px;
+  border: 1px solid #d9e7dc;
+  border-radius: 12px;
+  background: #f2f8f2;
+  color: #315443;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.simulation-notice svg { flex: 0 0 auto; margin-top: 2px; }
+.simulation-notice strong { color: #183d2c; }
+@media (max-width: 640px) {
+  .simulation-notice { margin: 14px 16px 0; }
+}
