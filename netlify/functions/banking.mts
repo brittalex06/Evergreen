@@ -526,27 +526,6 @@ export default async (req: Request) => {
           )
           .returning()
         if (!app) throw new Error('This application has already been reviewed.')
-        if (b.status === 'approved' && ['loan', 'deposit'].includes(app.kind))
-          throw new Error('Financial approvals are disabled.')
-        if (b.status === 'approved' && ['loan', 'deposit'].includes(app.kind)) {
-          const cents = Math.round(Number(app.data.amount) * 100)
-          if (!Number.isSafeInteger(cents) || cents <= 0 || cents > 100000000)
-            throw new Error('Invalid amount.')
-          await tx
-            .update(profiles)
-            .set({ balance: sql`${profiles.balance}+${cents}` })
-            .where(eq(profiles.id, app.userId))
-          await tx.insert(ledger).values({
-            userId: app.userId,
-            amount: cents,
-            description: 'Simulated ' + app.kind + ' approval',
-          })
-        }
-        if (app.kind === 'kyc' && b.status === 'approved')
-          await tx
-            .update(profiles)
-            .set({ data: sql`${profiles.data} || '{"accountLevel":2}'::jsonb` })
-            .where(eq(profiles.id, app.userId))
         await tx
           .insert(audits)
           .values({ actor: user.id, action: b.status, target: b.id })
