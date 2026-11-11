@@ -1,0 +1,35 @@
+[build]
+  command = "vite build"
+  publish = "dist/client"
+[build.environment]
+  NODE_VERSION = "24"
+[dev]
+  framework = "#custom"
+  command = "npm run dev"
+  targetPort = 3000
+  port = 8888
+
+[[redirects]]
+  from = "/admin/login"
+  to = "/login"
+  status = 302
+[[redirects]]
+  from = "/dashboard"
+  to = "/account"
+  status = 302
+[[redirects]]
+  from = "/send-money"
+  to = "/account/transfer"
+  status = 302
+[[redirects]]
+  from = "/get-started"
+  to = "/register"
+  status = 302
+[[redirects]]
+  from = "/accounts"
+  to = "/register"
+  status = 302
+[[redirects]]
+  from = "/currencies"
+  to = "/#exchange"
+  status = 302

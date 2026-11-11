@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /account
+Disallow: /admin
+Disallow: /api
+Sitemap: https://wealthfront-ebanking-demo.netlify.app/sitemap.xml
